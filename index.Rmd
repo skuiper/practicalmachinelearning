@@ -34,7 +34,7 @@ testing <- read.csv("pml-testing.csv", na.strings=c("NA","#DIV/0!",""))
 ```
 
 Remove columns of the training and testing files that contain any missing values and remove the first seven columns from each dataset
-We now have 59 instead of 160  columns in both datasets
+We now have 53 instead of 160  columns in both datasets
 The training dataset has 19622 rows and the testing data has 20 rows
 ```{r}
 training <- training[, colSums(is.na(training)) == 0]
