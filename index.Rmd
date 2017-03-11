@@ -2,7 +2,9 @@
 title: "Practical Machine Learning Project"
 author: "Shonda Kuiper"
 date: "March 11, 2017"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ### Background
@@ -83,4 +85,10 @@ From the confusion matrix, the accuracy rate is 0.999 so the random forest metho
 pred2.test <- predict(RFModel, testing, type = "class")
 pred2.test
 ```
+This provided the following output.
 
+1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 
+
+B  A  B  A  A  E  D  B  A  A  B  C  B  A  E  E  A  B  B  B 
+
+Levels: A B C D E
