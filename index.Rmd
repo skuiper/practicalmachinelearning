@@ -1,0 +1,86 @@
+---
+title: "Practical Machine Learning Project"
+author: "Shonda Kuiper"
+date: "March 11, 2017"
+output: html_document
+---
+
+### Background
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. 
+
+In this project, our goal is to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: <http://groupware.les.inf.puc-rio.br/har> (see the section on the Weight Lifting Exercise Dataset).
+
+
+The goal of this project is to predict the manner in which they did the exercise. This is the "classe" variable in the training set. We describe how we built our model, how we used cross validation, what we think the expected out of sample error is, and why we made the particular choices. 
+
+The data for this project come from this source: <http://groupware.les.inf.puc-rio.br/har>. 
+The training data for this project are available here: <https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv>
+
+The test data are available here: <https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv>
+
+#### Getting and cleaning data
+After downloading the data, we load it locally
+```{r message=FALSE}
+library(caret); 
+library(rattle); 
+library(rpart); 
+library(rpart.plot)
+library(randomForest); 
+
+training <- read.csv("pml-training.csv", na.strings=c("NA","#DIV/0!",""))
+testing <- read.csv("pml-testing.csv", na.strings=c("NA","#DIV/0!",""))
+```
+
+Remove columns of the training and testing files that contain any missing values and remove the first seven columns from each dataset
+We now have 59 instead of 160  columns in both datasets
+The training dataset has 19622 rows and the testing data has 20 rows
+```{r}
+training <- training[, colSums(is.na(training)) == 0]
+testing <- testing[, colSums(is.na(testing)) == 0]
+training <- training[, -c(1:7)]
+testing <- testing[, -c(1:7)]
+```
+
+#### Splitting "training" into both a training and testing dataset
+
+```{r}
+set.seed(1234) 
+inTrain <- createDataPartition(training$classe, p = 0.7, list = FALSE)
+train <- training[inTrain, ]
+valid <- training[-inTrain, ]
+```
+
+#### Predicting with Classification Trees
+
+```{r}
+CTModel <- rpart(classe ~ ., data=train, method="class")
+fancyRpartPlot(CTModel)
+
+```
+```{r}
+pred1 <- predict(CTModel, valid, type = "class")
+confusionMatrix(pred1, valid$classe)
+```
+
+From the confusion matrix, the accuracy rate is 0.873 so the classification tree does predict our outcome of interest, classe, fairly well.
+
+#### Predicting with Random Forests
+CTModel <- rpart(classe ~ ., data=train, method="class")
+fancyRpartPlot(CTModel)
+
+```{r}
+set.seed(1234)
+RFModel <- randomForest(classe ~ ., data=train)
+pred2 <- predict(RFModel, valid, type = "class")
+confusionMatrix(pred2, valid$classe)
+```
+
+From the confusion matrix, the accuracy rate is 0.999 so the random forest method does predict our outcome of interest, classe, very well.
+
+#### Predicting Results using the pml-testing data
+
+```{r}
+pred2.test <- predict(RFModel, testing, type = "class")
+pred2.test
+```
+
