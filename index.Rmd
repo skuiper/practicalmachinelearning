@@ -64,7 +64,7 @@ pred1 <- predict(CTModel, valid, type = "class")
 confusionMatrix(pred1, valid$classe)
 ```
 
-From the confusion matrix, the accuracy rate is 0.873 so the classification tree does predict our outcome of interest, classe, fairly well.
+From the confusion matrix, the accuracy rate is 0.688 so the expected out-of-sample error is 100-68.8 = 31.2%.
 
 #### Predicting with Random Forests
 CTModel <- rpart(classe ~ ., data=train, method="class")
@@ -77,7 +77,7 @@ pred2 <- predict(RFModel, valid, type = "class")
 confusionMatrix(pred2, valid$classe)
 ```
 
-From the confusion matrix, the accuracy rate is 0.999 so the random forest method does predict our outcome of interest, classe, very well.
+From the confusion matrix, the accuracy rate is 0.999 so the random forest method does predict our outcome of interest, classe, very well. The expected out-of-sample error is 100-99.9 = .01%.
 
 #### Predicting Results using the pml-testing data
 
