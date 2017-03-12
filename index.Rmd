@@ -55,6 +55,7 @@ valid <- training[-inTrain, ]
 #### Predicting with Classification Trees
 
 ```{r}
+set.seed(1234)
 CTModel <- rpart(classe ~ ., data=train, method="class")
 fancyRpartPlot(CTModel)
 
@@ -63,8 +64,13 @@ fancyRpartPlot(CTModel)
 pred1 <- predict(CTModel, valid, type = "class")
 confusionMatrix(pred1, valid$classe)
 ```
+We use cross validation to evaluate the efficacy of our model. We do this by
 
-From the confusion matrix, the accuracy rate is 0.688 so the expected out-of-sample error is 100-68.8 = 31.2%.
+* splitting the training set into sub-training/test sets
+* building a model on sub-training set
+* evaluating the model on the sub-test set
+
+From cross validatiaon on this classification tree model, we see from the confusion matrix, the accuracy rate is 0.688 so the expected out-of-sample error is 100-68.8 = 31.2%.
 
 #### Predicting with Random Forests
 CTModel <- rpart(classe ~ ., data=train, method="class")
@@ -77,7 +83,7 @@ pred2 <- predict(RFModel, valid, type = "class")
 confusionMatrix(pred2, valid$classe)
 ```
 
-From the confusion matrix, the accuracy rate is 0.999 so the random forest method does predict our outcome of interest, classe, very well. The expected out-of-sample error is 100-99.9 = .01%.
+In this random forest model, we see from the confusion matrix, the accuracy rate is 0.999 so the random forest method does predict our outcome of interest, classe, very well. The expected out-of-sample error is 100-99.6 = .4%.
 
 #### Predicting Results using the pml-testing data
 
